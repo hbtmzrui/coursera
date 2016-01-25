@@ -1,7 +1,7 @@
 package textgen;
 
 import java.util.AbstractList;
-
+import java.lang.IndexOutOfBoundsException;
 
 /** A class that implements a doubly linked list
  * 
@@ -17,24 +17,47 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+		size = 0;
+		head = new LLNode<E>(null);
+		tail = new LLNode<E>(null);
+		head.next = tail;
+		tail.prev = head;
 	}
 
 	/**
 	 * Appends an element to the end of the list
 	 * @param element The element to add
 	 */
-	public boolean add(E element ) 
+	public boolean add(E element) 
 	{
 		// TODO: Implement this method
-		return false;
+		if (element == null)
+			throw new NullPointerException();
+		
+		LLNode<E> node = new LLNode<E>(element);
+		tail.prev.next = node;
+		node.next = tail;
+		node.prev = tail.prev;
+		tail.prev = node;
+		size++;
+		
+		return true;
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
+	public E get(int index)
 	{
 		// TODO: Implement this method.
-		return null;
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException();
+		} else {
+			LLNode<E> node = head;
+			for (int i = 0; i <= index; i++) {
+				node = node.next;
+			}
+			return node.data;
+		}
 	}
 
 	/**
@@ -45,6 +68,25 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
+		if (index < 0 || index > size) {
+			throw new IndexOutOfBoundsException();
+		} else if (element == null) {
+			throw new NullPointerException();
+		} else {
+			LLNode<E> newNode = new LLNode<E>(element);
+			
+			LLNode<E> node = head;
+			for (int i = 0; i <= index; i++) {
+				node = node.next;
+			}
+			
+			newNode.next = node;
+			newNode.prev = node.prev;
+			node.prev.next = newNode;
+			node.prev = newNode;
+			
+			size++;
+		}
 	}
 
 
@@ -52,7 +94,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		return size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -64,7 +106,21 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		return null;
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException();
+		} else {		
+			LLNode<E> node = head;
+			for (int i = 0; i <= index; i++) {
+				node = node.next;
+			}
+			
+			node.prev.next = node.next;
+			node.next.prev = node.prev;
+			
+			size--;
+			
+			return node.data;
+		}
 	}
 
 	/**
@@ -77,7 +133,20 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		return null;
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException();
+		} else if (element == null) {
+			throw new NullPointerException();
+		} else {		
+			LLNode<E> node = head;
+			for (int i = 0; i <= index; i++) {
+				node = node.next;
+			}
+			E toReplace = node.data;
+			node.data = element;
+			
+			return toReplace;
+		}
 	}   
 }
 
