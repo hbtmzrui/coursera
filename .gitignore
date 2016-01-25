@@ -4,5 +4,7 @@
 .project
 .recommenders
 MOOCTextEditor/grader_output
+MOOCTextEditor/bin/*/*.class
+
 
 
