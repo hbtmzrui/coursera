@@ -2,5 +2,7 @@
 .settings
 .classpath
 .project
-*.class
+.recommenders
+MOOCTextEditor/grader_output
+
 
