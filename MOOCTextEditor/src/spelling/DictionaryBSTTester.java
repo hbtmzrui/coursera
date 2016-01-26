@@ -5,6 +5,7 @@ package spelling;
 
 import static org.junit.Assert.*;
 
+import java.awt.print.Printable;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -28,6 +29,7 @@ public class DictionaryBSTTester {
 	@Before
 	public void setUp() throws Exception 
 	{
+		System.out.println("setUp");
 		emptyDict = new DictionaryBST();
 		smallDict = new DictionaryBST();
 		largeDict = new DictionaryBST();
@@ -105,7 +107,7 @@ public class DictionaryBSTTester {
 		emptyDict.addWord("XYZAbC");
 		smallDict.addWord("XYZAbC");
 		largeDict.addWord("XYZAbC");
-
+		
 		assertEquals("Asserting xyzabc is in empty dict", true, emptyDict.isWord("xyzabc"));
 		assertEquals("Asserting xyzabc is in small dict", true, smallDict.isWord("xyzabc"));
 		assertEquals("Asserting xyzabc is large dict", true, largeDict.isWord("xyzabc"));
