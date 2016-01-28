@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
  * WPTree implements WordPath by dynamically creating a tree of words during a Breadth First
  * Search of Nearby words to create a path between two words. 
@@ -27,9 +28,9 @@ public class WPTree implements WordPath {
 	public WPTree () {
 		this.root = null;
 		// TODO initialize a NearbyWords object
-		// Dictionary d = new DictionaryHashSet();
-		// DictionaryLoader.loadDictionary(d, "data/dict.txt");
-		// this.nw = new NearbyWords(d);
+		Dictionary d = new DictionaryHashSet();
+		DictionaryLoader.loadDictionary(d, "data/dict.txt");
+		this.nw = new NearbyWords(d);
 	}
 	
 	//This constructor will be used by the grader code
@@ -38,11 +39,57 @@ public class WPTree implements WordPath {
 		this.nw = nw;
 	}
 	
+	private boolean isVisited(WPTreeNode node, HashSet<String> visited)
+	{
+		return visited.contains(node.getWord());
+	}
+	
+	private boolean isSameWord(WPTreeNode node, String word)
+	{
+		return node.getWord().equals(word);
+	}
+	
 	// see method description in WordPath interface
 	public List<String> findPath(String word1, String word2) 
 	{
-	    // TODO: Implement this method.
-	    return new LinkedList<String>();
+		List<String> rList = new LinkedList<String>();
+		
+		// initial variables
+		List<WPTreeNode> queue = new LinkedList<WPTreeNode>();     // String to explore
+		HashSet<String> visited = new HashSet<String>();   // to avoid exploring the same  
+														   // string multiple times		 
+		
+		// insert first node
+		WPTreeNode root = new WPTreeNode(word1, null);
+		queue.add(root);
+		
+		WPTreeNode found = null;
+
+		//search for word2 and build the suggestion tree
+		while (!queue.isEmpty()) {
+			WPTreeNode node = queue.remove(0);
+			
+			if (!isVisited(node, visited)) {
+				List<String> list = nw.distanceOne(node.getWord(), true);
+				for (String s : list) {
+					WPTreeNode child = node.addChild(s);
+					queue.add(child);
+					
+				}
+				visited.add(node.getWord());
+			}	
+			
+			if (isSameWord(node, word2)) {
+				found = node;
+				break;
+			}
+			
+		}
+		
+		if (found != null)
+			rList.addAll(found.buildPathToRoot());
+		
+	    return rList;
 	}
 	
 	// Method to print a list of WPTreeNodes (useful for debugging)
@@ -56,6 +103,16 @@ public class WPTree implements WordPath {
 		return ret;
 	}
 	
+	public static void main(String[] args) {
+		   // basic testing code to get started
+		   String word1 = "tail";
+		   String word2 = "tailor";
+		   WPTree wpTree = new WPTree();
+
+		   List<String> path = wpTree.findPath(word1, word2);
+		   System.out.println("possible path from \"" + word1 + "\" to \"" + word2 + "\" are:");
+		   System.out.println(path);
+	   }
 }
 
 /* Tree Node in a WordPath Tree. This is a standard tree with each
